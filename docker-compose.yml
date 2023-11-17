@@ -21,8 +21,8 @@ services:
         rm -f tmp/pids/server.pid
         bundle install
         bin/rails s -p 3000 -b '0.0.0.0'
-    # environment:
-      # SMTP_USER: ${SMTP_USER}
+    environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
     volumes:
       - .:/rails
       - bundle_path:/bundle
