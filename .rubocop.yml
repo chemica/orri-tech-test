@@ -23,6 +23,7 @@ Metrics/AbcSize:
   Exclude:
     - 'db/migrate/**/*'
 
+# Disable frozen string rule as not applicable for a throwaway project
 Style/FrozenStringLiteralComment:
   Enabled: false
 
@@ -268,7 +269,7 @@ Rails/I18nLazyLookup: # new in 2.14
 Rails/I18nLocaleAssignment: # new in 2.11
   Enabled: true
 Rails/I18nLocaleTexts: # new in 2.14
-  Enabled: true
+  Enabled: false
 Rails/IgnoredColumnsAssignment: # new in 2.17
   Enabled: true
 Rails/Inquiry: # new in 2.7
