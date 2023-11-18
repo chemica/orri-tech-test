@@ -9,4 +9,13 @@
     <%= user.stars %>
   </p>
 
+  <p><strong>Languages:</strong></p>
+  <% user.languages.each do |language| %>
+    <p><%= language.name %></p>
+  <% end %>
+
+  <p><strong>Repositories:</strong></p>
+  <% user.repositories.each do |repository| %>
+    <p><%= repository.name %> :: Language: <%= repository.language.name %></p>
+  <% end %>
 </div>

@@ -3,11 +3,11 @@ require 'rails_helper'
 RSpec.describe 'users/index', type: :view do
   before(:each) do
     assign(:users, [
-             User.create!(
+             User.build(
                name: 'Name',
                stars: 2022
              ),
-             User.create!(
+             User.build(
                name: 'Name2',
                stars: 2022
              )
