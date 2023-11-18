@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
   # GET /users or /users.json
   def index
-    @users = User.all
+    @users = UserDetail.all
   end
 
   # GET /users/1 or /users/1.json
@@ -17,10 +17,7 @@ class UsersController < ApplicationController
 
   # POST /users or /users.json
   def create
-    @user = User.new(user_params)
-    GithubImport.new.update_user(@user)
-
-    if @user.save
+    if create_user
       redirect_to user_url(@user), notice: 'User was successfully created.'
     else
       render :new, status: :unprocessable_entity
@@ -44,5 +41,14 @@ class UsersController < ApplicationController
   # Only allow a list of trusted parameters through.
   def user_params
     params.require(:user).permit(:name)
+  end
+
+  def create_user
+    @user = User.new(user_params)
+    return false unless @user.save
+
+    GithubImport.new.update_user(@user)
+    UserDetail.refresh
+    true
   end
 end

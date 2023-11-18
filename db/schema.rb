@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_17_171635) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_18_153603) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,4 +52,16 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_17_171635) do
   add_foreign_key "language_users", "users"
   add_foreign_key "repositories", "languages"
   add_foreign_key "repositories", "users"
+
+  create_view "user_details", materialized: true, sql_definition: <<-SQL
+      SELECT u.id,
+      u.name,
+      count(DISTINCT lu.id) AS language_count,
+      count(DISTINCT r.id) AS repository_count,
+      u.stars
+     FROM ((users u
+       LEFT JOIN language_users lu ON ((u.id = lu.user_id)))
+       LEFT JOIN repositories r ON ((u.id = r.user_id)))
+    GROUP BY u.id;
+  SQL
 end

@@ -77,3 +77,5 @@ group :test do
 end
 
 gem "faraday-retry", "~> 2.2"
+
+gem "scenic", "~> 1.7"

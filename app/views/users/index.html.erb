@@ -4,8 +4,8 @@
 
 <div id="users">
   <% @users.each do |user| %>
-    <%= render "short_user", user: %>
-    <p><%= link_to "Show this user", user %></p>
+    <%= render "user_detail", user: %>
+    <p><%= link_to "Show this user", user_path(user.id) %></p>
     <br/>
   <% end %>
 </div>
