@@ -10,10 +10,12 @@ default:
 # Build Docker containers
 build:
   @docker-compose build web --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g)   
+  @docker-compose build jobs --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g)   
 
 # Build Docker containers without cache
 rebuild:
   @docker-compose build web --no-cache --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) 
+  @docker-compose build jobs --no-cache --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) 
 
 # Set up the rails project for the first time
 setup:
