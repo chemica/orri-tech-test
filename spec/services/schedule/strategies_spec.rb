@@ -10,6 +10,23 @@ RSpec.describe Schedule::Strategies do
   let(:users) { [user_2_stars, user_3_stars, user_10_stars] }
 
   context 'with strategies' do
+    context 'when applying a strategy' do
+      it 'applies a strategy' do
+        expect_any_instance_of(Schedule::Strategies).to receive(:strict_schedule).once
+        Schedule::Strategies.apply_strategy(:strict_schedule, users, 3)
+      end
+
+      it 'builds a CSP' do
+        expect(CSP::Solver::Problem).to receive(:new).once.and_return CSP::Solver::Problem.new
+        Schedule::Strategies.apply_strategy(:strict_schedule, users, 3)
+      end
+
+      it 'solves a CSP' do
+        expect_any_instance_of(CSP::Solver::Problem).to receive(:solve).once
+        Schedule::Strategies.apply_strategy(:strict_schedule, users, 3)
+      end
+    end
+
     context 'with strict_schedule strategy' do
       context 'with possible values' do
         it 'returns an ideal solution' do

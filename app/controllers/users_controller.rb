@@ -27,7 +27,7 @@ class UsersController < ApplicationController
   # DELETE /users/1 or /users/1.json
   def destroy
     @user.destroy!
-
+    UserDetail.refresh
     redirect_to users_url, notice: 'User was successfully destroyed.'
   end
 
@@ -49,6 +49,7 @@ class UsersController < ApplicationController
 
     GithubImport.new.update_user(@user)
     UserDetail.refresh
+    Schedule::Scheduler.new.update_imports
     true
   end
 end

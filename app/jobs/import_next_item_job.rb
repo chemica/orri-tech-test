@@ -4,7 +4,7 @@ class ImportNextItemJob < ApplicationJob
 
   def perform(*_)
     current_hour = Time.new.utc.hour
-    slot = ImportSlot.for_hour(position: current_hour)
+    slot = ImportSlot.for_hour(hour: current_hour)
     Rails.logger.info("Importing slot: #{slot ? slot.id : 'none'}")
     return unless slot
 

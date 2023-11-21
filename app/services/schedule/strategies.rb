@@ -9,7 +9,13 @@ module Schedule
 
     # Strategies
 
-    STRATS = %i[strict_schedule leniently_weighted_schedule lenient_schedule].freeze
+    def self.apply_strategy(strategy, users, upper_slot)
+      csp = CSP::Solver::Problem.new
+      csp.vars(0..upper_slot, users)
+      strats = new(csp, users, upper_slot)
+      strats.send strategy
+      csp.solve
+    end
 
     def strict_schedule
       Rails.logger.info 'Setting up a strictly weighted schedule'

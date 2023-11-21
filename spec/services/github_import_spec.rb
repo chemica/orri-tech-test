@@ -6,14 +6,19 @@ RSpec.describe GithubImport do
   subject { GithubImport.new client }
 
   describe '#update_user' do
-    let(:rubyrepo) { double('Octokit::Repository', name: 'rubyrepo', language: 'ruby', stargazers_count: 13) }
-    let(:pythonrepo) { double('Octokit::Repository', name: 'pythonrepo', language: 'python', stargazers_count: 7) }
-    let(:csharprepo) { double('Octokit::Repository', name: 'csharprepo', language: 'csharp', stargazers_count: 3) }
-    let(:rust_repository) { Repository.new(name: 'rust_repository', language: Language.new(name: 'rust'), stars: 5) }
+    let(:rubyrepo) { double('Octokit::Repository', name: 'rubyrepo', language: 'Ruby', stargazers_count: 13) }
+    let(:pythonrepo) { double('Octokit::Repository', name: 'pythonrepo', language: 'Python', stargazers_count: 7) }
+    let(:csharprepo) { double('Octokit::Repository', name: 'csharprepo', language: 'CSharp', stargazers_count: 3) }
+    let(:rust_repository) { Repository.new(name: 'rust_repository', language: Language.new(name: 'Rust'), stars: 5) }
+
+    before do
+      allow(client).to receive(:languages).with("#{user.name}/rubyrepo").and_return(Ruby: 10_012)
+      allow(client).to receive(:languages).with("#{user.name}/pythonrepo").and_return(Python: 50)
+      allow(client).to receive(:languages).with("#{user.name}/csharprepo").and_return(CSharp: 7012)
+    end
 
     it 'calls Octokit client to get repositories' do
       expect(client).to receive(:repositories).with(user.name).once.and_return [rubyrepo]
-
       subject.update_user user
     end
 
@@ -73,13 +78,6 @@ RSpec.describe GithubImport do
       allow(client).to receive(:repositories).with(user.name).and_return([csharprepo, pythonrepo])
       subject.update_user user
       expect(user.stars).to eq 10
-    end
-
-    it 'handles null languages' do
-      allow(client).to receive(:repositories).with(user.name).and_return([csharprepo])
-      allow(csharprepo).to receive(:language).and_return(nil)
-      subject.update_user user
-      expect(user.languages.map(&:name)).to eq ['undefined']
     end
   end
 end
