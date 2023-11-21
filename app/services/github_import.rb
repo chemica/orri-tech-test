@@ -8,6 +8,7 @@ class GithubImport
 
   def update_user(user)
     repos = update_user_repositories(user)
+    delete_user_languages(user)
     update_user_languages(user, repos)
     update_user_stars(user, repos)
   end
@@ -28,16 +29,23 @@ class GithubImport
   end
 
   def update_user_languages(user, repos)
-    languages = repos.map(&:language).uniq.compact
-    languages.each do |language|
-      user.languages << language
+    repos.each do |repo|
+      languages = @client.languages("#{user.name}/#{repo['name']}")
+
+      languages.each do |language_name, bytes|
+        language = Language.find_or_create_by(name: language_name)
+        language_user = LanguageUser.find_or_create_by(language:, user:)
+        language_user.update(bytes: language_user.bytes + bytes)
+      end
     end
-    stale_language_ids = user.language_ids - languages.map(&:id)
-    user.languages_users.where(language_id: stale_language_ids).delete_all
   end
 
   def update_user_stars(user, repos)
     stars = repos.map(&:stars).sum
     user.update(stars:)
+  end
+
+  def delete_user_languages(user)
+    user.languages_users.delete_all
   end
 end
